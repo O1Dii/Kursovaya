@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-light bg-light">
+    <ul class="navbar-nav mr-4">
+        {% if username %}
+            <li class="nav-item">
+                <a href="/auth/logout/">Выйти ({{ username }})</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a href="/auth/login/">Войти</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% block content %}{% endblock %}
+{% block login %}{% endblock %}
+</body>
+</html>
