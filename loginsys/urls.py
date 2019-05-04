@@ -1,8 +1,12 @@
 from django.urls import path
-from loginsys.views import login, logout, register
+from loginsys.views import *
 
-urlpatterns = [
-    path('login/', login),
-    path('logout/', logout),
-    path('register/', register),
-]
+app_name = 'loginsys'
+
+urlpatterns = (
+    path('login/', login, name='login'),
+    # path('change_log/', change_login, name='change_login'),
+    path('change_password/', change_password, name='change_password'),
+    path('logout/', logout, name='logout'),
+    path('register/', register, name='register'),
+)

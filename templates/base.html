@@ -3,13 +3,15 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    {% block style %}
+    {% endblock %}
 </head>
 <body>
 <nav class="navbar navbar-light bg-light">
     <ul class="navbar-nav mr-4">
-        {% if username %}
+        {% if request.user.username %}
             <li class="nav-item">
-                <a href="/auth/logout/">Выйти ({{ username }})</a>
+                <a href="/auth/logout/">Выйти ({{ request.user.username }})</a>
             </li>
         {% else %}
             <li class="nav-item">

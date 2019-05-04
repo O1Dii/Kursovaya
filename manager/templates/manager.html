@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Меню
+{% endblock %}
+
+{% block style %}
+<style>
+.my-row{
+    margin: 15px;
+}
+.my-button{
+    width: 100%;
+    background-color: #ffe8a1;
+    border-radius: 20px;
+    height: 50px;
+}
+a{
+    width: 100%
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row my-row">
+        <a href="{% url 'manager:new' %}">
+            <button class="button my-button" >
+                <span>Новая тема(вопрос)</span>
+            </button>
+        </a>
+    </div>
+    <div class="row my-row">
+        <a href="{% url 'manager:results' %}">
+            <button class="button my-button" >
+                <span>Результаты</span>
+            </button>
+        </a>
+    </div>
+    <div class="row my-row">
+        <a href="{% url 'manager:settings' %}">
+            <button class="button my-button" >
+                <span>Настройки аккаунта</span>
+            </button>
+        </a>
+    </div>
+    <div class="row my-row">
+        <a href="{% url 'manager:experts' %}">
+            <button class="button my-button" >
+                <span>Управление экспертами</span>
+            </button>
+        </a>
+    </div>
+</div>
+{% endblock %}

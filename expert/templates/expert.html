@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Выбор темы
+{% endblock %}
+
+{% block style %}
+<style>
+body{
+    width: 100%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container justify-content-center">
+{% for topic in topics %}
+    <a class="row justify-content-center" href="../manager/topics/{{ topic.id }}"><h1>{{ topic.name }}</h1></a>
+{% endfor %}
+</div>
+
+{% endblock %}

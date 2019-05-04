@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'loginsys',
+    'main',
+    'manager',
+    'expert',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Kursovaya.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -83,6 +85,10 @@ DATABASES = {
 }
 
 
+#AUTH_USER_MODEL = 'loginsys.UserModel'
+
+#AUTHENTICATION_BACKENDS = ['loginsys.backends.MyAuthBackend',
+#                           'django.contrib.auth.backends.ModelBackend']
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
