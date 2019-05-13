@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import *
 
 
@@ -51,4 +52,5 @@ class RatingsAdmin(admin.ModelAdmin):
         model = SolutionRating
 
 
+admin.site.register(ExpertsToTopics)
 admin.site.register(SolutionRating, RatingsAdmin)

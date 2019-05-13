@@ -6,11 +6,11 @@ class MyUserManager(BaseUserManager):
     use_in_migrations = True
 
     # python manage.py createsuperuser
-    def create_superuser(self, email, is_staff, password, Organization, first_name,last_name, status):
+    def create_superuser(self, email, is_staff, password, organization, first_name, last_name, status):
         user = self.model(
             email=email,
             is_staff=is_staff,
-            Organization=Organization,
+            organization=organization,
             first_name=first_name,
             last_name=last_name,
             status=status,
@@ -29,9 +29,11 @@ class UserModel(AbstractBaseUser):
     '''Имя'''
     last_name = models.CharField(max_length=150, default=" ")
     '''Фамилия'''
-    Organization = models.CharField(max_length=150, default=" ")
+    organization = models.CharField(max_length=150, default=" ")
     '''Организация'''
-    is_staff = models.BooleanField()
+    rating = models.DecimalField(decimal_places=2, max_digits=3, null=True, default=None)
+    '''Рейтинг эксперта, None для менеджера'''
+    is_staff = models.BooleanField(default=False)
     '''Флаг, дающий права администратора'''
     is_active = models.BooleanField(default=True)
     '''Флаг, показывающий, активен ли аккаунт пользователя'''
@@ -42,11 +44,11 @@ class UserModel(AbstractBaseUser):
     USERNAME_FIELD = "email"
     # REQUIRED_FIELDS must contain all required fields on your User model,
     # but should not contain the USERNAME_FIELD or password as these fields will always be prompted for.
-    REQUIRED_FIELDS = ['is_staff', 'Organization', 'first_name', 'last_name', 'status']
-
-    class Meta:
-        app_label = "loginsys"
-        db_table = 'users'
+    REQUIRED_FIELDS = ['is_staff', 'organization', 'first_name', 'last_name', 'status']
+    #
+    # class Meta:
+    #     app_label = "loginsys"
+    #     db_table = 'users'
 
     def __str__(self):
         return self.email

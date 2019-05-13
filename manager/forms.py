@@ -1,9 +1,11 @@
 from django import forms
+
 from .models import *
 
 
 class TopicForm(forms.ModelForm):
-    # title = forms.CharField(widget=forms.TextInput(attrs={'size': 40}))
+    name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}), label='Тема')
+    description = forms.CharField(widget=forms.TextInput(attrs={'size': 40}), label="Описание темы")
 
     class Meta:
         model = Topic
@@ -14,6 +16,9 @@ class TopicForm(forms.ModelForm):
 
 
 class SolutionForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput(attrs={'size': 40}), label='Решение')
+    description = forms.CharField(label='Описание')
+
     class Meta:
         model = Solution
         fields = (
@@ -22,4 +27,11 @@ class SolutionForm(forms.ModelForm):
         )
 
 
-SolutionFormset = forms.formset_factory(SolutionForm, extra=1)
+class ImageForm(forms.ModelForm):
+    image = forms.ImageField(label='Изображение для решения', required=False)
+
+    class Meta:
+        model = SolutionImage
+        fields = (
+            'image',
+        )

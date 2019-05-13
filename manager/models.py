@@ -1,5 +1,7 @@
 from django.db import models
 
+from loginsys.models import UserModel
+
 
 class Topic(models.Model):
     name = models.CharField(max_length=75)
@@ -39,7 +41,8 @@ class SolutionImage(models.Model):
 
 
 class SolutionRating(models.Model):
-    rating = models.DecimalField(decimal_places=2, max_digits=5)
+    rating = models.DecimalField(decimal_places=0, max_digits=2)
+    expert_rating = models.DecimalField(decimal_places=2, max_digits=3)
     solution = models.ForeignKey(Solution, blank=True, null=True, default=None, on_delete=None)
     created = models.DateField(auto_now_add=True, auto_now=False)
     updated = models.DateField(auto_now_add=False, auto_now=True)
@@ -47,3 +50,12 @@ class SolutionRating(models.Model):
     class Meta:
         verbose_name = 'Оценка'
         verbose_name_plural = 'Оценки'
+
+
+class ExpertsToTopics(models.Model):
+    expert = models.ForeignKey(UserModel, on_delete=None)
+    topic = models.ForeignKey(Topic, on_delete=None)
+
+    class Meta:
+        verbose_name = 'Связь эксперт-вопрос'
+        verbose_name_plural = 'Связи эксперт-вопрос'

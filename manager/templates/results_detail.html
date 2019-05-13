@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load googlecharts %}
+
+{% block title %}
+Результаты
+{% endblock %}
+
+{% block style %}
+<style>
+.main-wrapper {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-wrapper">
+    <div class="row">
+        <div class="col-2">
+            <a href="/manager/results/">
+                <button class="btn btn-dark" >
+                    <span>Назад</span>
+                </button>
+            </a>
+        </div>
+        <div class="col-8 justify-content-center">
+        <div id="graph" style="padding-top: 10%;"></div>
+        </div>
+        {% googlecharts %}
+
+            {% data ratings %}
+            {% col "string" "Название решения" %}
+                "{{ val }}"
+            {% endcol %}
+            {% col "number" "Оценка" %}
+                {{ val }}
+            {% endcol %}
+            {% enddata %}
+            {% options %}
+                kind: "ColumnChart",
+                options: {
+                    backgroundColor: "#f9f9f9",
+                    title: 'Результаты "{{ topic }}"',
+                    colors: ['#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+                    height: 500
+                }
+            {% endoptions %}
+            {% graph "graph" %}
+        {% endgooglecharts %}
+
+{#            {% for rating in ratings %}#}
+{#                <h1>#}
+{#                    {{ rating.0 }}#}
+{#                </h1>#}
+{#                <p>#}
+{#                W = {{ rating.1 }}#}
+{#                </p>#}
+{#            {% endfor %}#}
+{#        </div>#}
+    </div>
+</div>
+{% endblock %}

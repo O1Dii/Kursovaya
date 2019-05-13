@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
+# from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
+
+from loginsys.forms import UserCreationForm
 
 
 def login(request):
     args = {}
     args.update(csrf(request))
     if request.POST:
-        username = request.POST.get('username', '')
+        email = request.POST.get('email', '')
         password = request.POST.get('password', '')
-        user = auth.authenticate(username=username, password=password)
+        user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
-            if bool(auth.get_user(request).is_superuser):
+            if bool(auth.get_user(request).is_staff):
                 return redirect('/admin/')
-            elif bool(auth.get_user(request).is_staff):
+            elif auth.get_user(request).rating is None:
                 return redirect('/manager/')
             return redirect('/expert/')
         else:
@@ -42,7 +44,7 @@ def register(request):
         newuser_form = UserCreationForm(request.POST)
         if newuser_form.is_valid():
             newuser_form.save()
-            newuser = auth.authenticate(username=newuser_form.cleaned_data['username'],
+            newuser = auth.authenticate(email=newuser_form.cleaned_data['email'],
                                         password=newuser_form.cleaned_data['password2'])
             auth.login(request, newuser)
             return redirect('/')
@@ -54,10 +56,14 @@ def register(request):
 def change_password(request):
     if request.method == "POST":
         form = PasswordChangeForm(data=request.POST, user=request.user)
-
+        args = {
+            'form': form
+        }
         if form.is_valid():
             form.save()
             return redirect('/')
+        else:
+            return render(request, 'change_password.html', args)
     else:
         form = PasswordChangeForm(user=request.user)
         args = {

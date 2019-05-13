@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Редактирование
+{% endblock %}
+
+{% block style %}
+<style>
+a{
+    width: 100%
+}
+.main-wrapper {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-wrapper">
+    <div class="row">
+        <div class="col-2">
+            <a href="/manager/experts">
+                <button class="btn btn-dark" >
+                    <span>Назад</span>
+                </button>
+            </a>
+        </div>
+        <div class="col-8">
+            <form method="post">{% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Подтвердить</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

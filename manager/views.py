@@ -1,56 +1,137 @@
-from django.views.generic import View
+from django import forms
+from django.contrib import auth
 from django.shortcuts import render, redirect
-from .models import Topic, Solution, SolutionRating
-from .forms import TopicForm, SolutionFormset
+from django.views.generic import View
+
+from loginsys.forms import UserEditForm
+from loginsys.models import UserModel
+from .forms import TopicForm, SolutionForm, ImageForm
+from .models import Topic, Solution, SolutionRating, ExpertsToTopics
+from .util import AuthCheckMixin
 
 
-class ManagerPage(View):
+class ManagerPage(AuthCheckMixin, View):
     def get(self, request):
+        perm = self.check_perm_manager(request)
+        if perm is not None:
+            return perm
         return render(request, 'manager.html', {})
 
 
-class NewTopicPage(View):
+class NewTopicPage(AuthCheckMixin, View):
+    SolutionFormset = forms.formset_factory(SolutionForm, extra=0)
+    experts = UserModel.objects.filter(is_staff=False).exclude(rating=None)
+
     def get(self, request):
-        heading_message = 'Formset Demo'
-        if request.method == 'GET':
-            formset = SolutionFormset(request.GET or None)
-            print(formset)
-        elif request.method == 'POST':
-            formset = SolutionFormset(request.POST)
-            if formset.is_valid():
-                for form in formset:
-                    # extract name from each form and save
-                    name = form.cleaned_data.get('name')
-                    # save book instance
-                    if name:
-                        # Book(name=name).save()
-                        pass
-                # once all books are saved, redirect to book list view
-                return redirect('/manager')
+        perm = self.check_perm_manager(request)
+        if perm is not None:
+            return perm
+        self.SolutionFormset = forms.formset_factory(SolutionForm, extra=0)
+        formset = self.SolutionFormset(request.GET or None)
         return render(request, 'new.html', {
             'form': TopicForm,
             'formset': formset,
-            'heading': heading_message,
+            'id': id,
+            'experts': self.experts,
+            'image_form': ImageForm
         })
 
+    def post(self, request):
+        formset = self.SolutionFormset(request.POST)
+        topic_form = TopicForm(request.POST)
+        if formset.is_valid() and topic_form.is_valid():
+            topic = topic_form.save()
+            for i in range(len(self.experts)):
+                if request.POST.get('expert' + str(i)):
+                    ExpertsToTopics.objects.create(expert=self.experts[i], topic=topic)
+            for form in formset:
+                name = form.cleaned_data.get('name')
+                description = form.cleaned_data.get('description')
+                Solution.objects.create(name=name, description=description, topic=topic)
+        return redirect('/manager')
 
-class ResultsPage(View):
+
+class ResultsPage(AuthCheckMixin, View):
     def get(self, request):
-        return render(request, 'results.html', {})
+        perm = self.check_perm_manager(request)
+        if perm is not None:
+            return perm
+        topics = Topic.objects.all()
+        attrs = {
+            'topics': topics
+        }
+        return render(request, 'results.html', attrs)
 
 
-class SettingsPage(View):
+class ResultsDetailPage(AuthCheckMixin, View):
+    def get(self, request, id):
+        perm = self.check_perm_manager(request)
+        if perm is not None:
+            return perm
+        topic = Topic.objects.get(id=id)
+        solutions = Solution.objects.filter(topic=topic)
+        ratings = []
+        for solution in solutions:
+            solution_ratings = SolutionRating.objects.filter(solution=solution)
+            expert_ratings_sum = sum([i.expert_rating for i in solution_ratings])
+            temp_solution_ratings = []
+            for i in range(len(solution_ratings)):
+                temp_solution_ratings.append(solution_ratings[i].rating
+                                             * solution_ratings[i].expert_rating
+                                             / expert_ratings_sum)
+            w = sum(temp_solution_ratings)
+            ratings.append([solution.name, w])
+
+        ratings_sum = sum([i[1] for i in ratings])
+        for i in range(len(ratings)):
+            ratings[i][1] = float(round(ratings[i][1] / ratings_sum, 2))
+
+        print(ratings)
+        attrs = {
+            'ratings': ratings,
+            'topic': topic.name
+        }
+        return render(request, 'results_detail.html', attrs)
+
+
+class SettingsPage(AuthCheckMixin, View):
     def get(self, request):
+        perm = self.check_perm_manager(request)
+        if perm is not None:
+            return perm
         return render(request, 'settings.html', {})
 
 
-class ExpertsPage(View):
+class ExpertsPage(AuthCheckMixin, View):
     def get(self, request):
-        return render(request, 'experts.html', {})
+        perm = self.check_perm_manager(request)
+        if perm is not None:
+            return perm
+        experts = UserModel.objects.filter(is_staff=False).exclude(rating=None)
+        return render(request, 'experts.html', {'experts': experts})
 
 
-class TopicDetailPage(View):
+class ExpertEditPage(AuthCheckMixin, View):
     def get(self, request, id):
+        perm = self.check_perm_manager(request)
+        if perm is not None:
+            return perm
+        expert = UserModel.objects.get(sys_id=id)
+        form = UserEditForm(instance=expert)
+        return render(request, 'expert_edit.html', {'form': form})
+
+    def post(self, request, id):
+        expert = UserModel.objects.get(sys_id=id)
+        form = UserEditForm(request.POST, instance=expert)
+        form.save()
+        return redirect('/')
+
+
+class TopicDetailPage(AuthCheckMixin, View):
+    def get(self, request, id):
+        perm = self.check_perm_expert(request)
+        if perm is not None:
+            return perm
         topic = Topic.objects.get(pk=id)
         solutions = Solution.objects.filter(topic=topic)
         attrs = {
@@ -60,14 +141,14 @@ class TopicDetailPage(View):
         return render(request, 'topic.html', attrs)
 
     def post(self, request, id):
-        if request.method == "POST":
-            topic = Topic.objects.get(pk=id)
-            solutions = Solution.objects.filter(topic=topic)
-            attrs = {
-                'topic': topic,
-                'solutions': solutions
-            }
-            for i in range(len(solutions)):
-                SolutionRating.objects.create(rating=request.POST.get('dec_field' + str(i + 1)),
-                                              solution=solutions[i])
+        topic = Topic.objects.get(pk=id)
+        solutions = Solution.objects.filter(topic=topic)
+        attrs = {
+            'topic': topic,
+            'solutions': solutions
+        }
+        for i in range(len(solutions)):
+            SolutionRating.objects.create(rating=request.POST.get('dec_field' + str(i + 1)),
+                                          expert_rating=auth.get_user(request).rating,
+                                          solution=solutions[i])
         return render(request, 'topic.html', attrs)

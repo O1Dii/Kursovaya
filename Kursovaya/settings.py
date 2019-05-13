@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'main',
     'manager',
     'expert',
+    'googlecharts',
 ]
 
 MIDDLEWARE = [
@@ -85,10 +86,10 @@ DATABASES = {
 }
 
 
-#AUTH_USER_MODEL = 'loginsys.UserModel'
+AUTH_USER_MODEL = 'loginsys.UserModel'
 
-#AUTHENTICATION_BACKENDS = ['loginsys.backends.MyAuthBackend',
-#                           'django.contrib.auth.backends.ModelBackend']
+AUTHENTICATION_BACKENDS = ['loginsys.backends.MyAuthBackend',
+                          'django.contrib.auth.backends.ModelBackend']
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 

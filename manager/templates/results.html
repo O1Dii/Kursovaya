@@ -19,7 +19,8 @@ a{
     width: 100%
 }
 .main-wrapper {
-  height: 100vh;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 </style>
 {% endblock %}
@@ -30,7 +31,7 @@ a{
     <div class="row">
         <div class="col-2">
             <a href="/manager">
-                <button class="button my-button" >
+                <button class="btn btn-dark" >
                     <span>Назад</span>
                 </button>
             </a>
@@ -43,20 +44,9 @@ a{
      {#      </a> #}
      {#   </div> #}
         <div class="col-8">
-            <div class="row my-row">
-                <a href="{% url 'loginsys:change_password' %}">
-                    <button class="button my-button" >
-                        <span>Сменить пароль</span>
-                    </button>
-                </a>
-            </div>
-            <div class="row my-row">
-                <a href="{% url 'loginsys:logout' %}">
-                    <button class="button my-button" >
-                        <span>Выйти</span>
-                    </button>
-                </a>
-            </div>
+            {% for topic in topics %}
+                <a href="{% url "manager:results_detail" id=topic.id %}"><h1>{{ topic.name }}</h1></a>
+            {% endfor %}
         </div>
     </div>
 </div>

@@ -1,14 +1,13 @@
 from django.contrib import auth
-from django.views.generic import View
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 
 def main_page(request):
-    if auth.get_user(request).id is None:
+    if auth.get_user(request).is_anonymous:
         return redirect('/auth/login')
-    elif bool(auth.get_user(request).is_superuser):
-        return redirect('/admin/')
     elif bool(auth.get_user(request).is_staff):
+        return redirect('/admin/')
+    elif auth.get_user(request).rating is None:
         return redirect('/manager/')
     return redirect('/expert/')
 

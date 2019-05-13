@@ -18,11 +18,16 @@
 a{
     width: 100%
 }
+.main-wrapper {
+    margin-left: 2%;
+    margin-right: 2%;
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="main-wrapper row justify-content-center">
+<div class="col-8 justify-content-center">
     <div class="row my-row">
         <a href="{% url 'manager:new' %}">
             <button class="button my-button" >
@@ -51,5 +56,6 @@ a{
             </button>
         </a>
     </div>
+</div>
 </div>
 {% endblock %}
