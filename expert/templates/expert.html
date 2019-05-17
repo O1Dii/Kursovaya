@@ -14,9 +14,15 @@ body{
 
 {% block content %}
 <div class="container justify-content-center">
+{% if topics %}
 {% for topic in topics %}
-    <a class="row justify-content-center" href="../manager/topics/{{ topic.id }}"><h1>{{ topic.name }}</h1></a>
+    <a class="row justify-content-center" href="/expert/topics/{{ topic.id }}"><h1>{{ topic.name }}</h1></a>
 {% endfor %}
+{% else %}
+    <h1 style="text-align: center">
+        В данный момент нет доступных тем
+    </h1>
+{% endif %}
 </div>
 
 {% endblock %}

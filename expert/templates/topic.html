@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ topic.name }}
+{% endblock %}
+
+{% block content %}
+<div class="main-wrapper">
+    <div class="row">
+    {% include 'back_button.html' %}
+<div class="col-8">
+<h1>{{ topic.name }}</h1>
+<p>{{ topic.description }}</p>
+    <form method="post"> {% csrf_token %}
+    {% for solution in solutions %}
+        <h3>Решение №{{ forloop.counter }} {{ solution.name }}
+            <input required="required" type="number" name="dec_field{{ forloop.counter }}" step="0.01"/>
+        </h3>
+        {% if solution.image %}
+            <div class="row">
+        <img class="col-8" src="{{ solution.image.url }}" alt="No image"/>
+            </div>
+        {% endif %}
+        <p>{{ solution.description }}</p>
+    {% endfor %}
+<button type="submit" class="btn btn-primary">
+    <span>Подтвердить</span>
+</button>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}

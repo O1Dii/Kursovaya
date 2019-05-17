@@ -4,32 +4,35 @@
 Редактирование
 {% endblock %}
 
-{% block style %}
-<style>
-a{
-    width: 100%
-}
-.main-wrapper {
-    margin-left: 2%;
-    margin-right: 2%;
-}
-</style>
-{% endblock %}
-
 {% block content %}
+    <script type="text/javascript">
+        $(function() {
+            $("#dlt_btn").click(function(){
+                if(confirm("Вы точно хотите удалить данного эксперта?")){
+                    $.ajax({
+                        type: 'POST',
+                        url: '/manager/experts/{{ page_id }}',
+                        data:{
+                            delete: true,
+                            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        success:function(){
+                            window.location.replace("/manager/experts");
+                        }
+                    })
+                }
+            })
+        })
+    </script>
 <div class="main-wrapper">
     <div class="row">
-        <div class="col-2">
-            <a href="/manager/experts">
-                <button class="btn btn-dark" >
-                    <span>Назад</span>
-                </button>
-            </a>
-        </div>
+    {% include 'back_button.html' %}
         <div class="col-8">
+            <p>Email: {{ expert_email }}</p>
             <form method="post">{% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">Подтвердить</button>
+                <button type="button" id="dlt_btn" class="btn btn-danger">Удалить эксперта</button>
             </form>
         </div>
     </div>

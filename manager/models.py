@@ -6,6 +6,7 @@ from loginsys.models import UserModel
 class Topic(models.Model):
     name = models.CharField(max_length=75)
     description = models.TextField(unique=True)
+    active = models.BooleanField(default=True)
     created = models.DateField(auto_now_add=True, auto_now=False)
     updated = models.DateField(auto_now_add=False, auto_now=True)
 
@@ -20,6 +21,7 @@ class Topic(models.Model):
 class Solution(models.Model):
     name = models.CharField(max_length=75)
     description = models.TextField(unique=True)
+    image = models.ImageField()
     topic = models.ForeignKey(Topic, blank=True, null=True, default=None, on_delete=None)
     created = models.DateField(auto_now_add=True, auto_now=False)
     updated = models.DateField(auto_now_add=False, auto_now=True)
@@ -27,17 +29,6 @@ class Solution(models.Model):
     class Meta:
         verbose_name = 'Решение'
         verbose_name_plural = 'Решения'
-
-
-class SolutionImage(models.Model):
-    image = models.ImageField(upload_to='solution_images/')
-    solution = models.ForeignKey(Solution, blank=True, null=True, default=None, on_delete=None)
-    created = models.DateField(auto_now_add=True, auto_now=False)
-    updated = models.DateField(auto_now_add=False, auto_now=True)
-
-    class Meta:
-        verbose_name = 'Картина'
-        verbose_name_plural = 'Картинки'
 
 
 class SolutionRating(models.Model):

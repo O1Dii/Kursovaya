@@ -10,7 +10,7 @@ urlpatterns = (
     path('results/', ResultsPage.as_view(), name='results'),
     path('results/<int:id>', ResultsDetailPage.as_view(), name='results_detail'),
     path('settings/', SettingsPage.as_view(), name='settings'),
+    path('settings/edit', EditManager.as_view(), name='manager_edit'),
     path('experts/', ExpertsPage.as_view(), name='experts'),
     path('experts/<int:id>', ExpertEditPage.as_view(), name='expert_edit'),
-    path('topics/<int:id>', TopicDetailPage.as_view(), name='topics'),
 )

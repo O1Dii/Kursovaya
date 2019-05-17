@@ -3,10 +3,9 @@
 from django.contrib import auth
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
-# from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf
 
-from loginsys.forms import UserCreationForm
+from loginsys.forms import UserCreationForm, ChangePasswordForm
 
 
 def login(request):
@@ -44,9 +43,9 @@ def register(request):
         newuser_form = UserCreationForm(request.POST)
         if newuser_form.is_valid():
             newuser_form.save()
-            newuser = auth.authenticate(email=newuser_form.cleaned_data['email'],
-                                        password=newuser_form.cleaned_data['password2'])
-            auth.login(request, newuser)
+            # newuser = auth.authenticate(email=newuser_form.cleaned_data['email'],
+            #                             password=newuser_form.cleaned_data['password2'])
+            # auth.login(request, newuser)
             return redirect('/')
         else:
             args['form'] = newuser_form
@@ -55,7 +54,7 @@ def register(request):
 
 def change_password(request):
     if request.method == "POST":
-        form = PasswordChangeForm(data=request.POST, user=request.user)
+        form = ChangePasswordForm(data=request.POST, user=request.user)
         args = {
             'form': form
         }
@@ -65,7 +64,7 @@ def change_password(request):
         else:
             return render(request, 'change_password.html', args)
     else:
-        form = PasswordChangeForm(user=request.user)
+        form = ChangePasswordForm(user=request.user)
         args = {
             'form': form
         }

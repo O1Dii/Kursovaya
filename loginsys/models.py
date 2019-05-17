@@ -32,6 +32,10 @@ class UserModel(AbstractBaseUser):
     organization = models.CharField(max_length=150, default=" ")
     '''Организация'''
     rating = models.DecimalField(decimal_places=2, max_digits=3, null=True, default=None)
+
+    rating_i = models.DecimalField(decimal_places=2, max_digits=3, null=True, default=None)
+
+    rating_a = models.DecimalField(decimal_places=2, max_digits=3, null=True, default=None)
     '''Рейтинг эксперта, None для менеджера'''
     is_staff = models.BooleanField(default=False)
     '''Флаг, дающий права администратора'''

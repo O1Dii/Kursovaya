@@ -6,25 +6,29 @@
 Результаты
 {% endblock %}
 
-{% block style %}
-<style>
-.main-wrapper {
-    margin-left: 2%;
-    margin-right: 2%;
-}
-</style>
-{% endblock %}
-
 {% block content %}
+{#    <script type="text/javascript">#}
+{#    $(function(){#}
+{#        $("#close_button").click(function () {#}
+{#            if(confirm("Вы точно хотите завершить решение данного вопроса?")){#}
+{#                    $.ajax({#}
+{#                        type: 'POST',#}
+{#                        url: '/manager/results/{{ page_id }}',#}
+{#                        data:{#}
+{#                            delete: true,#}
+{#                            csrfmiddlewaretoken:{% csrf_token %}#}
+{#                        },#}
+{#                        success:function(){#}
+{#                            alert("Тема успешно закрыта");#}
+{#                        }#}
+{#                    })#}
+{#                }#}
+{#        })#}
+{#    })#}
+{#    </script>#}
 <div class="main-wrapper">
     <div class="row">
-        <div class="col-2">
-            <a href="/manager/results/">
-                <button class="btn btn-dark" >
-                    <span>Назад</span>
-                </button>
-            </a>
-        </div>
+        {% include 'back_button.html' %}
         <div class="col-8 justify-content-center">
         <div id="graph" style="padding-top: 10%;"></div>
         </div>
@@ -59,6 +63,15 @@
 {#                </p>#}
 {#            {% endfor %}#}
 {#        </div>#}
+    {% if topic.active %}
+        <div class="col-2">
+            <form method="post">{% csrf_token %}
+            <button type="submit" id="close_button" class="btn btn-danger" >
+                <span>Закрыть тему</span>
+            </button>
+            </form>
+        </div>
+    {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -5,12 +5,22 @@
 {% endblock %}
 
 {% block login %}
-    <div >
-        <form action="/auth/register/" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-
-            <input class="button" type="submit" value="Зарегистрироваться">
-        </form>
+<div class="main-wrapper">
+    <div class="row">
+        <div class="col-2">
+            <a href="../../manager/experts/">
+                <button class="btn btn-dark" >
+                    <span>Назад</span>
+                </button>
+            </a>
+        </div>
+        <div class="col-8">
+            <form action="/auth/register/" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input class="btn btn-primary" type="submit" value="Зарегистрироваться">
+            </form>
+        </div>
     </div>
+</div>
 {% endblock %}
