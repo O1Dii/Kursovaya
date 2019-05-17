@@ -9,12 +9,12 @@ from .models import UserModel
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
-    first_name = forms.CharField(label='Имя', max_length=30, required=True, widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'name': 'first_name', 'id': 'first_name','placeholder': 'Введите ваше Имя'}))
-    last_name = forms.CharField(label='Фамилия', max_length=150, required=True, widget=forms.TextInput(attrs={"type": "text", "class": "form-control", "name": "last_name", 'id': "last_name", 'placeholder':"Введите вашу Фамилию"}))
-    rating_i = forms.DecimalField(label='Ra', required=False, max_digits=3, decimal_places=2)
-    rating_a = forms.DecimalField(label='Ri', required=False, max_digits=3, decimal_places=2)
-    email = forms.EmailField(label="e-mail", max_length=30, required=True, widget=forms.EmailInput(attrs={"type":"text", "class":"form-control", "name":"email", "id":"email", "placeholder":"Введите ваш Email"}))
-    organization = forms.CharField(label='Организация', help_text='', required=True, widget=forms.TextInput(attrs={"type":"text", "class":"form-control", "name":"organization", "id":"organization", "placeholder":"Введите вашу организацию"}))
+    first_name = forms.CharField(label='Имя', max_length=30, required=True, widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'name': 'first_name', 'id': 'first_name','placeholder': 'Введите Имя'}))
+    last_name = forms.CharField(label='Фамилия', max_length=150, required=True, widget=forms.TextInput(attrs={"type": "text", "class": "form-control", "name": "last_name", 'id': "last_name", 'placeholder':"Введите Фамилию"}))
+    rating_i = forms.DecimalField(label='Ri', required=False, max_digits=3, decimal_places=2)
+    rating_a = forms.DecimalField(label='Ra', required=True, max_digits=3, decimal_places=2)
+    email = forms.EmailField(label="e-mail", max_length=30, required=True, widget=forms.EmailInput(attrs={"type":"text", "class":"form-control", "name":"email", "id":"email", "placeholder":"Введите Email"}))
+    organization = forms.CharField(label='Организация', help_text='', required=True, widget=forms.TextInput(attrs={"type":"text", "class":"form-control", "name":"organization", "id":"organization", "placeholder":"Введите организацию"}))
     password1 = forms.CharField(label='Пароль', help_text='', required=True, widget=forms.PasswordInput(attrs={"type":"password", "class":"form-control", "name":"password", "id":"password", "placeholder":"Введите пароль"}))
     password2 = forms.CharField(label='Подтверждение пароля:', help_text='', required=True, widget=forms.PasswordInput(attrs={"type":"password", "class":"form-control", "name":"confirm", "id":"confirm", "placeholder":"Подтвердите ввод пароля"}))
 

@@ -25,7 +25,7 @@ class NewTopicPage(AuthCheckMixin, View):
         perm = self.check_perm_manager(request)
         if perm is not None:
             return perm
-        SolutionFormset = forms.formset_factory(SolutionForm, extra=0)
+        SolutionFormset = forms.formset_factory(SolutionForm, extra=2)
         formset = SolutionFormset(request.GET or None)
         return render(request, 'new.html', {
             'form': TopicForm,
@@ -35,21 +35,24 @@ class NewTopicPage(AuthCheckMixin, View):
         })
 
     def post(self, request):
-        SolutionFormset = forms.formset_factory(SolutionForm, extra=0)
+        SolutionFormset = forms.formset_factory(SolutionForm, extra=2)
         experts = UserModel.objects.filter(is_staff=False).exclude(rating=None)
-        formset = SolutionFormset(request.POST)
+        formset = SolutionFormset(request.POST, request.FILES)
         topic_form = TopicForm(request.POST)
+        print(formset.is_valid())
         if formset.is_valid() and topic_form.is_valid():
             topic = topic_form.save()
             for i in range(len(experts)):
                 if request.POST.get('expert' + str(i)):
                     ExpertsToTopics.objects.create(expert=experts[i], topic=topic)
             for form in formset:
-                name = form.cleaned_data.get('name')
-                description = form.cleaned_data.get('description')
-                image = form.cleaned_data.get('image')
-                Solution.objects.create(name=name, description=description, topic=topic,
-                                        image=image)
+                Solution.objects.create(**form.cleaned_data, topic=topic)
+        else:
+            return render(request, 'new.html', {'form': topic_form,
+                                                'formset': formset,
+                                                'id': id,
+                                                'experts': experts,
+                                                'error': True})
         return redirect('/manager')
 
 
@@ -87,13 +90,17 @@ class ResultsDetailPage(AuthCheckMixin, View):
             ratings.append([solution.name, w])
 
         ratings_sum = sum([i[1] for i in ratings])
-        for i in range(len(ratings)):
-            ratings[i][1] = float(round(ratings[i][1] / ratings_sum, 2))
+        if ratings_sum != 0:
+            for i in range(len(ratings)):
+                ratings[i][1] = float(round(ratings[i][1] / ratings_sum, 2))
+        else:
+            ratings.clear()
 
         print(ratings)
         attrs = {
             'ratings': ratings,
             'topic': topic.name,
+            'topic_active': topic.active,
             'page_id': id
         }
         return render(request, 'results_detail.html', attrs)

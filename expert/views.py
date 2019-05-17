@@ -39,7 +39,14 @@ class TopicDetailPage(AuthCheckMixin, View):
             'solutions': solutions
         }
         for i in range(len(solutions)):
-            SolutionRating.objects.create(rating=request.POST.get('dec_field' + str(i + 1)),
-                                          expert_rating=auth.get_user(request).rating,
-                                          solution=solutions[i])
+            if SolutionRating.objects.get(expert_rating=auth.get_user(request).rating,
+                                          solution=solutions[i]) is not None:
+                SolutionRating.objects.create(rating=request.POST.get('dec_field' + str(i + 1)),
+                                              expert_rating=auth.get_user(request).rating,
+                                              solution=solutions[i])
+            else:
+                sol_rating = SolutionRating.objects.get(expert_rating=auth.get_user(request).rating,
+                                                        solution=solutions[i])
+                sol_rating.rating = request.POST.get('dec_field' + str(i + 1))
+                sol_rating.save()
         return render(request, 'topic.html', attrs)

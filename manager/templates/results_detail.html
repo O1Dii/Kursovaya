@@ -29,6 +29,7 @@
 <div class="main-wrapper">
     <div class="row">
         {% include 'back_button.html' %}
+    {% if ratings %}
         <div class="col-8 justify-content-center">
         <div id="graph" style="padding-top: 10%;"></div>
         </div>
@@ -53,6 +54,11 @@
             {% endoptions %}
             {% graph "graph" %}
         {% endgooglecharts %}
+        {% else %}
+        <h1 style="text-align: center">
+            В данный момент оценок данного вопроса ещё нет
+        </h1>
+    {% endif %}
 
 {#            {% for rating in ratings %}#}
 {#                <h1>#}
@@ -63,7 +69,7 @@
 {#                </p>#}
 {#            {% endfor %}#}
 {#        </div>#}
-    {% if topic.active %}
+    {% if topic_active %}
         <div class="col-2">
             <form method="post">{% csrf_token %}
             <button type="submit" id="close_button" class="btn btn-danger" >

@@ -33,7 +33,7 @@ class ManagerEditForm(forms.ModelForm):
 
 
 class SolutionForm(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(
+    name = forms.CharField(initial='Решение', widget=forms.TextInput(
         attrs={'size': 40,
                'placeholder': 'Название решения'}),
         label='Решение')
@@ -48,5 +48,5 @@ class SolutionForm(forms.ModelForm):
         fields = (
             "name",
             "description",
-            'image'
+            'image',
         )

@@ -14,7 +14,7 @@
     <form method="post"> {% csrf_token %}
     {% for solution in solutions %}
         <h3>Решение №{{ forloop.counter }} {{ solution.name }}
-            <input required="required" type="number" name="dec_field{{ forloop.counter }}" step="0.01"/>
+            <input required="required" type="number" name="dec_field{{ forloop.counter }}" step="0.1" max="10"/>
         </h3>
         {% if solution.image %}
             <div class="row">

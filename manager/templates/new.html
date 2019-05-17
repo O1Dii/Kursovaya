@@ -10,7 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script>
-        var glob = 0;
+        var glob = 2;
         $(function() {
             $("#generate_forms").click(function () {
                 $("[name=form-TOTAL_FORMS]").val(glob);
@@ -21,36 +21,27 @@
         });
         $(function() {
             $("#submit_form").click(function () {
-                $("[name=form-TOTAL_FORMS]").val(glob);
                 html = $("#form_template").clone().html().replace(/__prefix__/g, glob);
                 $("#forms").append(html);
-                glob++;
+                $("#forms").hide();
+                {#e.isDefaultPrevented = function(){ return false; };#}
+                {#$(this).trigger(e);#}
+                $('form#my-form').submit();
             })
         });
-        $(function () {
-            $("#generate_image").click(function() {
-                // update total form count
-                //quantity = $("[name=quantity]").val();
-                $("[name=form-TOTAL_FORMS]").val(1);
-
-                html = $("#image_template").clone().html().replace("__prefix__", 1).hide();
-                $("#images").append(html);
-
-                // copy the template and replace prefixes with the correct index
-                //for (i=0;i<quantity;i++) {
-                // Note: Must use global replace here
-                //};
-            })
-        })
     </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<form method="post">{% csrf_token %}
+<form enctype="multipart/form-data" id="my-form" method="post">{% csrf_token %}
     <div class="row">
         {% include 'back_button.html' %}
         {% if experts %}
         <div class="col-7">
             <h3>Новая тема</h3>
             {{ form.as_p }}
+            {% if error %}
+                <h3>Пожалуйста, заполните все решения</h3>
+            {% endif %}
+            {{ formset.as_p }}
             {{ formset.management_form }}
             <div style="display: none;" id="form_template">
                 {{ formset.empty_form.as_p }}
